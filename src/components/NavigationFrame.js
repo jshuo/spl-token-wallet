@@ -79,7 +79,7 @@ export default function NavigationFrame({ children }) {
         {!isExtension && (
           <div
             style={{
-              textAlign: 'center',
+              textAlign: 'left',
               background: '#fafafa',
               color: 'black',
               paddingLeft: '24px',
@@ -87,21 +87,35 @@ export default function NavigationFrame({ children }) {
               fontSize: '14px',
             }}
           >
-            <Typography>
-              Beware of sites attempting to impersonate sollet.io or other DeFi
-              services.
-            </Typography>
+            <Typography></Typography>
           </div>
         )}
         <Toolbar>
           <Typography variant="h6" className={classes.title} component="h1">
-            {isExtensionWidth ? 'Sollet' : 'Solana SPL Token Wallet'}
+            {isExtensionWidth ? 'Sollet' : 'SecuX Wallet for Solana SPL Token'}
           </Typography>
+
           <NavigationButtons />
         </Toolbar>
       </AppBar>
-      <main className={classes.content}>{children}</main>
-      {!isExtensionWidth && <Footer />}
+
+      <main className={classes.content}>{children}
+      <ul>
+          <li>
+            . This application is a fork of{' '}
+            <a href="https://chrome.google.com/webstore/detail/terra-station-wallet/aiifbnbfobpmeekipheeijimdpnlpgpp">
+              Solana Web wallet
+            </a>{' '}
+            and modified for SecuX Wallet and Customers ONLY
+          </li>
+          <li>
+            . To avoid phishing attacks, <strong>NEVER</strong> enter or submit
+            recovery phrase by using this application. Please connect your SecuX
+            hardware wallet when accessing or transferring your Terra assets
+          </li>
+        </ul>
+        </main>
+        {!isExtensionWidth && <Footer />}
     </>
   );
 }
@@ -402,7 +416,7 @@ function WalletSelector() {
           <ListItemIcon className={classes.menuItemIcon}>
             <UsbIcon fontSize="small" />
           </ListItemIcon>
-          Import Hardware Wallet
+          Import SecuX Wallet
         </MenuItem>
         <MenuItem
           onClick={() => {
