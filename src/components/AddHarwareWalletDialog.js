@@ -76,7 +76,7 @@ function ConfirmHardwareWallet({ account, onDone, onBack }) {
       <DialogContent style={{ paddingTop: 16 }}>
         <div style={{ display: 'flex', flexDirection: 'column' }}>
           <Typography fontWeight="fontWeightBold">
-            Check your ledger and confirm the address displayed is the address
+            Check your SecuX and confirm the address displayed is the address
             chosen. Then click "done".
           </Typography>
           <Typography>{account.publicKey.toString()}</Typography>
