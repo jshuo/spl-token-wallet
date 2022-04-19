@@ -1,4 +1,4 @@
-import TransportWebUSB from '@secux/transport-webusb';
+import {SecuxWebUSB} from '@secux/transport-webusb';
 import {
   getPublicKey,
   solana_derivation_path,
@@ -28,15 +28,16 @@ export class SecuxWalletProvider {
 
   init = async () => {
     if (TRANSPORT === null) {
-      TRANSPORT = await TransportWebUSB.create();
+      TRANSPORT = await SecuxWebUSB.Create(
+        () => console.log('connected'),
+        async () => {
+          console.log('disconnected')
+        }
+      )
+      await TRANSPORT.Connect()
     }
     this.transport = TRANSPORT;
     this.pubKey = await getPublicKey(this.transport, this.solanaDerivationPath);
-    this.transport.on('disconnect', this.onDisconnect);
-    this.listAddresses = async (walletCount) => {
-      // TODO: read accounts from secux
-      return [this.pubKey];
-    };
     return this;
   };
 

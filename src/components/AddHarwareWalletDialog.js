@@ -7,6 +7,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import Card from '@material-ui/core/Card';
 import DialogForm from './DialogForm';
 import { LedgerWalletProvider } from '../utils/walletProvider/ledger';
+import { SecuxWalletProvider } from '../utils/walletProvider/secux';
 import {
   AccountsSelector,
   DerivationPathMenuItem,
@@ -143,7 +144,7 @@ function LedgerAccounts({ onContinue, onClose, open }) {
       const fetch = async () => {
         let accounts = [];
         if (dPathMenuItem === DerivationPathMenuItem.Bip44Root) {
-          let provider = new LedgerWalletProvider({
+          let provider = new SecuxWalletProvider({
             derivationPath: toDerivationPath(dPathMenuItem),
           });
           accounts.push(await provider.init());
@@ -151,7 +152,7 @@ function LedgerAccounts({ onContinue, onClose, open }) {
           setAccounts(null);
           // Loading in parallel makes the ledger upset. So do it serially.
           for (let k = 0; k < 10; k += 1) {
-            let provider = new LedgerWalletProvider({
+            let provider = new SecuxWalletProvider({
               derivationPath: toDerivationPath(dPathMenuItem),
               account: k,
             });

@@ -23,7 +23,7 @@ export function solana_derivation_path(account, change, derivationPath) {
   derivationPath = derivationPath
     ? derivationPath
     : DERIVATION_PATH.bip44Change;
-    solana_derivation_path
+
   if (derivationPath === DERIVATION_PATH.bip44Root) {
     const length = 2;
     const derivation_path = Buffer.alloc(1 + length * 4);
@@ -58,8 +58,9 @@ export function solana_derivation_path(account, change, derivationPath) {
 
 async function solana_secux_get_pubkey(transport, derivation_path) {
 
-  const rsp = await transport.Send(0x80, INS_GET_PUBKEY, 0, 0,
-    Buffer.concat([derivation_path]));
+  const compressed_pk = await transport.getPublickey(`m/44'/330'/0'`, 1)
+  console.log(compressed_pk)
+  return compressed_pk
 }
 
 export async function solana_secux_sign_transaction(
@@ -81,7 +82,7 @@ export async function solana_secux_sign_bytes(
   const payload = Buffer.concat([num_paths, derivation_path, msg_bytes]);
 
   const rsp = await transport.Send(0x70, INS_SIGN_MESSAGE, 1, 0,
-    Buffer.concat([payload]));
+    Buffer.concat([msg_bytes]));
 }
 
 export async function getPublicKey(transport, path) {
@@ -104,10 +105,6 @@ export async function solana_secux_confirm_public_key(
   transport,
   derivation_path,
 ) {
-  return await solana_send(
-    transport,
-    INS_GET_PUBKEY,
-    P1_CONFIRM,
-    derivation_path,
-  );
+  return await await transport.Send(0x80, INS_GET_PUBKEY, 0, 0,
+    Buffer.concat([derivation_path]));
 }

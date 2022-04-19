@@ -1,5 +1,6 @@
 import { LocalStorageWalletProvider } from './localStorage';
 import { LedgerWalletProvider } from './ledger';
+import { SecuxWalletProvider } from './secux';
 
 export class WalletProviderFactory {
   static getProvider(type, args) {
@@ -8,7 +9,8 @@ export class WalletProviderFactory {
     }
 
     if (type === 'ledger') {
-      return new LedgerWalletProvider(args);
+      return new SecuxWalletProvider(args);
     }
+    
   }
 }
