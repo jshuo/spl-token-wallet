@@ -16,6 +16,7 @@ const P1_CONFIRM = 0x01;
 const P2_EXTEND = 0x01;
 const P2_MORE = 0x02;
 const bip44Path = `m/44'/501'/0'`
+const bip44Root = `m/44'/501'/`
 
 const BIP32_HARDENED_BIT = (1 << 31) >>> 0;
 function _harden(n) {
@@ -30,32 +31,11 @@ export function solana_derivation_path(account, change, derivationPath) {
     : DERIVATION_PATH.bip44Change;
 
   if (derivationPath === DERIVATION_PATH.bip44Root) {
-    const length = 2;
-    const derivation_path = Buffer.alloc(1 + length * 4);
-    let offset = 0;
-    offset = derivation_path.writeUInt8(length, offset);
-    offset = derivation_path.writeUInt32BE(_harden(44), offset); // Using BIP44
-    derivation_path.writeUInt32BE(_harden(501), offset); // Solana's BIP44 path
-    return derivation_path;
+    return bip44Path;
   } else if (derivationPath === DERIVATION_PATH.bip44) {
-    const length = 3;
-    const derivation_path = Buffer.alloc(1 + length * 4);
-    let offset = 0;
-    offset = derivation_path.writeUInt8(length, offset);
-    offset = derivation_path.writeUInt32BE(_harden(44), offset); // Using BIP44
-    offset = derivation_path.writeUInt32BE(_harden(501), offset); // Solana's BIP44 path
-    derivation_path.writeUInt32BE(_harden(useAccount), offset);
-    return derivation_path;
+    return bip44Root`${useAccount}`;
   } else if (derivationPath === DERIVATION_PATH.bip44Change) {
-    const length = 4;
-    const derivation_path = Buffer.alloc(1 + length * 4);
-    let offset = 0;
-    offset = derivation_path.writeUInt8(length, offset);
-    offset = derivation_path.writeUInt32BE(_harden(44), offset); // Using BIP44
-    offset = derivation_path.writeUInt32BE(_harden(501), offset); // Solana's BIP44 path
-    offset = derivation_path.writeUInt32BE(_harden(useAccount), offset);
-    derivation_path.writeUInt32BE(_harden(useChange), offset);
-    return derivation_path;
+    return bip44Root`${useAccount}/${useChange}`;
   } else {
     throw new Error('Invalid derivation path');
   }
@@ -63,7 +43,7 @@ export function solana_derivation_path(account, change, derivationPath) {
 
 async function solana_secux_get_pubkey(transport, derivation_path) {
 
-  const pk = await transport.getPublickey(bip44Path, EllipticCurve.ED25519, false)
+  const pk = await transport.getPublickey(derivation_path, EllipticCurve.ED25519, false)
   console.log('solana_secux_get_pubkey:' + pk.toString('hex'))
   return pk
 }
@@ -127,7 +107,7 @@ export async function solana_secux_confirm_public_key(
   transport,
   derivation_path,
 ) {
-  const pk = await transport.getPublickey(bip44Path, EllipticCurve.ED25519, false)
+  const pk = await transport.getPublickey(derivation_path, EllipticCurve.ED25519, false)
   console.log('solana_secux_confirm_public_key:' + pk.toString('hex'))
   return pk
 }
