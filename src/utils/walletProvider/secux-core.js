@@ -6,22 +6,8 @@ import { ITransport, StatusCode, TransportStatusError } from "@secux/transport";
 
 const bs58 = require('bs58');
 
-const INS_GET_PUBKEY = 0xc1;
-const INS_GET_XPUBKEY = 0xc0;
-const INS_SIGN_MESSAGE = 0xa3;
-
-const P1_NON_CONFIRM = 0x00;
-const P1_CONFIRM = 0x01;
-
-const P2_EXTEND = 0x01;
-const P2_MORE = 0x02;
 const bip44Path = `m/44'/501'/0'`
 const bip44Root = `m/44'/501'/`
-
-const BIP32_HARDENED_BIT = (1 << 31) >>> 0;
-function _harden(n) {
-  return (n | BIP32_HARDENED_BIT) >>> 0;
-}
 
 export function solana_derivation_path(account, change, derivationPath) {
   let useAccount = account ? account : 0;
@@ -82,7 +68,8 @@ export async function solana_secux_sign_bytes(
   if (rsp.status !== StatusCode.SUCCESS) throw new TransportStatusError(rsp.status);
   if (rsp.dataLength !== SIGNATURE_LENGTH) throw Error('Invalid length Signature');
   console.log(rsp.data)
-  return rsp.data
+  return Buffer.from(rsp.data, "hex")
+ 
 }
 
 export async function getPublicKey(transport, path) {
@@ -97,7 +84,6 @@ export async function getPublicKey(transport, path) {
     from_derivation_path,
   );
   const from_pubkey_string = bs58.encode(from_pubkey_bytes);
-  // const from_pubkey_string = 'CDLTxfPMz3EGLx7XdBwnhs1SwUirr2pQzson3xFzJCjU'
   console.log(from_pubkey_string)
 
   return new PublicKey(from_pubkey_string);
