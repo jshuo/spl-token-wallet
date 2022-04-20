@@ -15,7 +15,7 @@ const P1_CONFIRM = 0x01;
 
 const P2_EXTEND = 0x01;
 const P2_MORE = 0x02;
-const bip44Path = `m/44'/330'/0'`
+const bip44Path = `m/44'/501'/0'`
 
 const BIP32_HARDENED_BIT = (1 << 31) >>> 0;
 function _harden(n) {
@@ -77,44 +77,27 @@ export async function solana_secux_sign_transaction(
   return solana_secux_sign_bytes(transport, derivation_path, msg_bytes);
 }
 
-function buildTxBuffer(paths, txs, tp, chainId) {
-  if (paths.length != txs.length) throw Error('Inconsistent length of paths and txs');
-
-  const head = [], data = [];
-  for (let i = 0; i < paths.length; i++) {
-    const headerBuffer = Buffer.alloc(4);
-    headerBuffer.writeUInt16LE(tp, 0);
-    headerBuffer.writeUInt16LE(chainId, 2);
-
-    const path = paths[i];
-    const { pathNum, pathBuffer } = buildPathBuffer(path);
-    // generic prepare can use 3 or 5 path level key to sign
-    if (pathNum !== 5 && pathNum !== 3) throw Error('Invalid Path for Signing Transaction');
-    //@ts-ignore
-    head.push(Buffer.concat([Buffer.from([pathNum * 4 + 4]), headerBuffer, pathBuffer]));
-
-
-    // fixed 2 byte length
-    const preparedTxLenBuf = Buffer.alloc(2);
-    preparedTxLenBuf.writeUInt16BE(txs[i].length, 0);
-    //@ts-ignore
-    data.push(Buffer.concat([preparedTxLenBuf, txs[i]]));
-  }
-
-  return Buffer.concat([Buffer.from([paths.length]), ...head, ...data]);
-}
 
 export async function solana_secux_sign_bytes(
   transport,
   derivation_path,
   msg_bytes,
 ) {
+  const head = [], data = [];
   const SIGNATURE_LENGTH = 65;
   var num_paths = Buffer.alloc(1);
   num_paths.writeUInt8(1);
-  const payload = Buffer.concat([num_paths, derivation_path, msg_bytes]);
+  const headerBuffer = Buffer.alloc(4);
+  const { pathNum, pathBuffer } = buildPathBuffer(bip44Path);
+  head.push(Buffer.concat([Buffer.from([pathNum * 4 + 4]), headerBuffer, pathBuffer]));
+  // fixed 2 byte length
+  const preparedTxLenBuf = Buffer.alloc(2);
+  preparedTxLenBuf.writeUInt16BE(msg_bytes.length, 0);
+  //@ts-ignore
+  data.push(Buffer.concat([preparedTxLenBuf, msg_bytes]));
+  const payload = Buffer.concat([num_paths, ...head, ...data]);
   console.log(payload.toString('hex'))
-  const rsp = await transport.Send(0x70, INS_SIGN_MESSAGE, 1, 0,
+  const rsp = await transport.Send(0x70, 0xa3, 0, 1,
     Buffer.concat([payload]));
   if (rsp.status !== StatusCode.SUCCESS) throw new TransportStatusError(rsp.status);
   if (rsp.dataLength !== SIGNATURE_LENGTH) throw Error('Invalid length Signature');
