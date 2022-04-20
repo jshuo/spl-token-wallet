@@ -11,6 +11,7 @@ const P1_CONFIRM = 0x01;
 
 const P2_EXTEND = 0x01;
 const P2_MORE = 0x02;
+const bip44Path = `m/44'/330'/0'`
 
 const BIP32_HARDENED_BIT = (1 << 31) >>> 0;
 function _harden(n) {
@@ -58,7 +59,7 @@ export function solana_derivation_path(account, change, derivationPath) {
 
 async function solana_secux_get_pubkey(transport, derivation_path) {
 
-  const compressed_pk = await transport.getPublickey(`m/44'/330'/0'`, 1)
+  const compressed_pk = await transport.getPublickey(bip44Path, 1)
   console.log(compressed_pk)
   return compressed_pk
 }
@@ -96,7 +97,8 @@ export async function getPublicKey(transport, path) {
     transport,
     from_derivation_path,
   );
-  const from_pubkey_string = bs58.encode(from_pubkey_bytes);
+  // const from_pubkey_string = bs58.encode(from_pubkey_bytes);
+  const from_pubkey_string = 'CDLTxfPMz3EGLx7XdBwnhs1SwUirr2pQzson3xFzJCjU'
 
   return new PublicKey(from_pubkey_string);
 }
@@ -105,6 +107,7 @@ export async function solana_secux_confirm_public_key(
   transport,
   derivation_path,
 ) {
-  return await await transport.Send(0x80, INS_GET_PUBKEY, 0, 0,
-    Buffer.concat([derivation_path]));
+  const compressed_pk = await transport.getPublickey(bip44Path, 1)
+  console.log(compressed_pk)
+  return compressed_pk
 }
