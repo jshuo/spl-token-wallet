@@ -33,7 +33,7 @@ export default function AddHardwareWalletDialog({ open, onAdd, onClose }) {
           onContinue={() => setView(AddHardwareView.Accounts)}
         />
       ) : view === AddHardwareView.Accounts ? (
-        <LedgerAccounts
+        <SecuxAccounts
           onContinue={(account) => {
             setHardwareAccount(account);
             setView(AddHardwareView.Confirm);
@@ -98,7 +98,7 @@ function ConfirmHardwareWallet({ account, onDone, onBack }) {
 function AddHardwareWalletSplash({ onContinue, onClose }) {
   return (
     <>
-      <DialogTitle>Add hardware wallet</DialogTitle>
+      <DialogTitle>Add SecuX wallet</DialogTitle>
       <DialogContent style={{ paddingTop: 16 }}>
         <div
           style={{
@@ -107,7 +107,7 @@ function AddHardwareWalletSplash({ onContinue, onClose }) {
           }}
         >
           <b>
-            Connect your ledger and open the Solana application. When you are
+            Connect your SecuX and open the Solana application. When you are
             ready, click "continue".
           </b>
         </div>
@@ -124,7 +124,7 @@ function AddHardwareWalletSplash({ onContinue, onClose }) {
   );
 }
 
-function LedgerAccounts({ onContinue, onClose, open }) {
+function SecuxAccounts({ onContinue, onClose, open }) {
   const [dPathMenuItem, setDPathMenuItem] = useState(
     DerivationPathMenuItem.Bip44Root,
   );
@@ -162,9 +162,9 @@ function LedgerAccounts({ onContinue, onClose, open }) {
         setAccounts(accounts);
       };
       fetch().catch((err) => {
-        console.log(`received error when attempting to connect ledger: ${err}`);
+        console.log(`received error when attempting to connect secux: ${err}`);
         if (err && err.statusCode === 0x6804) {
-          enqueueSnackbar('Unlock ledger device', { variant: 'error' });
+          enqueueSnackbar('Unlock secux device', { variant: 'error' });
         }
         onClose();
       });

@@ -32,7 +32,7 @@ import { useSnackbar } from 'notistack';
 const DEFAULT_WALLET_SELECTOR = {
   walletIndex: 0,
   importedPubkey: undefined,
-  ledger: false,
+  secux: false,
 };
 
 export class Wallet {
@@ -172,18 +172,18 @@ export function WalletProvider({ children }) {
   // `walletCount` is the number of HD wallets.
   const [walletCount, setWalletCount] = useLocalStorageState('walletCount', 1);
 
-  if (walletSelector.ledger && !_hardwareWalletAccount) {
+  if (walletSelector.secux && !_hardwareWalletAccount) {
     walletSelector = DEFAULT_WALLET_SELECTOR;
     setWalletSelector(DEFAULT_WALLET_SELECTOR);
   }
 
   useEffect(() => {
     (async () => {
-      if (!seed) {
-        return null;
-      }
+      // if (!seed) {
+      //   return null;
+      // }
       let wallet;
-      if (walletSelector.ledger) {
+      if (walletSelector.secux) {
         try {
           const onDisconnect = () => {
             setWalletSelector(DEFAULT_WALLET_SELECTOR);
@@ -195,10 +195,10 @@ export function WalletProvider({ children }) {
             account: walletSelector.account,
             change: walletSelector.change,
           };
-          wallet = await Wallet.create(connection, 'ledger', args);
+          wallet = await Wallet.create(connection, 'secux', args);
         } catch (e) {
-          console.log(`received error using ledger wallet: ${e}`);
-          let message = 'Received error unlocking ledger';
+          console.log(`received error using secux wallet: ${e}`);
+          let message = 'Received error unlocking secux';
           if (e.statusCode) {
             message += `: ${e.statusCode}`;
           }
@@ -242,7 +242,7 @@ export function WalletProvider({ children }) {
     enqueueSnackbar,
     derivationPath,
   ]);
-  function addAccount({ name, importedAccount, ledger }) {
+  function addAccount({ name, importedAccount, secux }) {
     if (importedAccount === undefined) {
       name && localStorage.setItem(`name${walletCount}`, name);
       setWalletCount(walletCount + 1);
@@ -270,7 +270,7 @@ export function WalletProvider({ children }) {
   };
   const [walletNames, setWalletNames] = useState(getWalletNames());
   function setAccountName(selector, newName) {
-    if (selector.importedPubkey && !selector.ledger) {
+    if (selector.importedPubkey && !selector.secux) {
       let newPrivateKeyImports = { ...privateKeyImports };
       newPrivateKeyImports[selector.importedPubkey.toString()].name = newName;
       setPrivateKeyImports(newPrivateKeyImports);
@@ -294,7 +294,7 @@ export function WalletProvider({ children }) {
         selector: {
           walletIndex: idx,
           importedPubkey: undefined,
-          ledger: false,
+          secux: false,
         },
         isSelected: walletSelector.walletIndex === idx,
         address,
@@ -308,7 +308,7 @@ export function WalletProvider({ children }) {
         selector: {
           walletIndex: undefined,
           importedPubkey: pubkey,
-          ledger: false,
+          secux: false,
         },
         address: new PublicKey(bs58.decode(pubkey)),
         name: `${name} (imported)`, // TODO: do this in the Component with styling.
@@ -327,14 +327,14 @@ export function WalletProvider({ children }) {
       ..._hardwareWalletAccount,
       selector: {
         walletIndex: undefined,
-        ledger: true,
+        secux: true,
         importedPubkey: _hardwareWalletAccount.publicKey,
         derivationPath: _hardwareWalletAccount.derivationPath,
         account: _hardwareWalletAccount.account,
         change: _hardwareWalletAccount.change,
       },
       address: _hardwareWalletAccount.publicKey,
-      isSelected: walletSelector.ledger,
+      isSelected: walletSelector.secux,
     };
   }
 
@@ -368,7 +368,7 @@ export function useWallet() {
 }
 
 export function useWalletPublicKeys() {
-  let wallet = useWallet();
+  let wallet = useWallet(); 
   let [tokenAccountInfo, loaded] = useAsyncData(
     wallet.getTokenAccountInfo,
     wallet.getTokenAccountInfo,

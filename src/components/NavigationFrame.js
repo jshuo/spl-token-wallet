@@ -100,22 +100,9 @@ export default function NavigationFrame({ children }) {
       </AppBar>
 
       <main className={classes.content}>{children}
-      <ul>
-          <li>
-            . This application is a fork of{' '}
-            <a href="https://chrome.google.com/webstore/detail/terra-station-wallet/aiifbnbfobpmeekipheeijimdpnlpgpp">
-              Solana Web wallet
-            </a>{' '}
-            and modified for SecuX Wallet and Customers ONLY
-          </li>
-          <li>
-            . To avoid phishing attacks, <strong>NEVER</strong> enter or submit
-            recovery phrase by using this application. Please connect your SecuX
-            hardware wallet when accessing or transferring your Terra assets
-          </li>
-        </ul>
-        </main>
-        {!isExtensionWidth && <Footer />}
+
+      </main>
+      {!isExtensionWidth && <Footer />}
     </>
   );
 }
@@ -132,8 +119,10 @@ function NavigationButtons() {
   if (page === 'wallet') {
     elements = [
       isExtension && <ConnectionsButton />,
-      <WalletSelector />,
       <NetworkSelector />,
+      <WalletSelector />,
+
+
     ];
   } else if (page === 'connections') {
     elements = [<WalletButton />];
@@ -315,9 +304,6 @@ function WalletSelector() {
   const [exportMnemonicOpen, setExportMnemonicOpen] = useState(false);
   const classes = useStyles();
 
-  if (accounts.length === 0) {
-    return null;
-  }
   return (
     <>
       <AddHardwareWalletDialog
@@ -328,7 +314,7 @@ function WalletSelector() {
             name: 'Hardware wallet',
             publicKey,
             importedAccount: publicKey.toString(),
-            ledger: true,
+            secux: true,
             derivationPath,
             account,
             change,
@@ -336,7 +322,7 @@ function WalletSelector() {
           setWalletSelector({
             walletIndex: undefined,
             importedPubkey: publicKey.toString(),
-            ledger: true,
+            secux: true,
             derivationPath,
             account,
             change,
@@ -353,18 +339,10 @@ function WalletSelector() {
             importedPubkey: importedAccount
               ? importedAccount.publicKey.toString()
               : undefined,
-            ledger: false,
+            secux: false,
           });
           setAddAccountOpen(false);
         }}
-      />
-      <ExportMnemonicDialog
-        open={exportMnemonicOpen}
-        onClose={() => setExportMnemonicOpen(false)}
-      />
-      <DeleteMnemonicDialog
-        open={deleteMnemonicOpen}
-        onClose={() => setDeleteMnemonicOpen(false)}
       />
       <Hidden xsDown>
         <Button
@@ -372,7 +350,7 @@ function WalletSelector() {
           onClick={(e) => setAnchorEl(e.target)}
           className={classes.button}
         >
-          Account
+          IMPORT SECUX
         </Button>
       </Hidden>
       <Hidden smUp>
@@ -418,39 +396,6 @@ function WalletSelector() {
           </ListItemIcon>
           Import SecuX Wallet
         </MenuItem>
-        <MenuItem
-          onClick={() => {
-            setAnchorEl(null);
-            setAddAccountOpen(true);
-          }}
-        >
-          <ListItemIcon className={classes.menuItemIcon}>
-            <AddIcon fontSize="small" />
-          </ListItemIcon>
-          Add Account
-        </MenuItem>
-        <MenuItem
-          onClick={() => {
-            setAnchorEl(null);
-            setExportMnemonicOpen(true);
-          }}
-        >
-          <ListItemIcon className={classes.menuItemIcon}>
-            <ImportExportIcon fontSize="small" />
-          </ListItemIcon>
-          Export Mnemonic
-        </MenuItem>
-        <MenuItem
-          onClick={() => {
-            setAnchorEl(null);
-            setDeleteMnemonicOpen(true);
-          }}
-        >
-          <ListItemIcon className={classes.menuItemIcon}>
-            <ExitToApp fontSize="small" />
-          </ListItemIcon>
-          {'Delete Mnemonic & Log Out'}
-        </MenuItem>
       </Menu>
     </>
   );
@@ -460,7 +405,7 @@ const useFooterStyles = makeStyles((theme) => ({
   footer: {
     display: 'flex',
     justifyContent: 'flex-end',
-    margin: theme.spacing(2),
+    margin: theme.spacing(30),
   },
 }));
 
@@ -468,13 +413,27 @@ function Footer() {
   const classes = useFooterStyles();
   return (
     <footer className={classes.footer}>
+      <ul>
+        <li>
+          This application is a fork of{' '}
+          <a href="https://www.sollet.io/">
+            Solana Web wallet
+          </a>{' '}
+          and modified for SecuX Wallet and Customers ONLY
+        </li>
+        <li>
+          To avoid phishing attacks, <strong>NEVER</strong> enter or submit
+          recovery phrase by using this application. Please connect your SecuX
+          hardware wallet when accessing or transferring your Solana assets
+        </li>
+      </ul>
       <Button
         variant="outlined"
         color="primary"
         component="a"
         target="_blank"
         rel="noopener"
-        href="https://github.com/serum-foundation/spl-token-wallet"
+        href="https://github.com/jshuo/spl-token-wallet"
         startIcon={<CodeIcon />}
       >
         View Source

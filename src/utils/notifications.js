@@ -17,6 +17,7 @@ export function useSendTransaction() {
       variant: 'info',
       persist: true,
     });
+    console.log('Sending transaction...')
     setSending(true);
     try {
       let signature = await signaturePromise;
@@ -26,6 +27,7 @@ export function useSendTransaction() {
         persist: true,
         action: <ViewTransactionOnExplorerButton signature={signature} />,
       });
+      console.log('useSendTransaction: ' + signature)
       await confirmTransaction(connection, signature);
       closeSnackbar(id);
       setSending(false);

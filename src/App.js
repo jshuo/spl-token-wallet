@@ -86,7 +86,7 @@ function PageContents() {
   const [page] = usePage();
   const [showWalletSuggestion, setShowWalletSuggestion] = useState(true);
   const suggestionKey = 'private-irgnore-wallet-suggestion';
-  const ignoreSuggestion = window.localStorage.getItem(suggestionKey);
+  const ignoreSuggestion = true;
   if (!wallet) {
     return (
       <>
@@ -100,7 +100,7 @@ function PageContents() {
             }}
           />
         )}
-        <LoginPage />
+        {/* <LoginPage /> */}
       </>
     );
   }

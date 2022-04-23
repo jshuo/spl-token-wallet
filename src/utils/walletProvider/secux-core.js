@@ -67,9 +67,9 @@ export async function solana_secux_sign_bytes(
     Buffer.concat([payload]));
   if (rsp.status !== StatusCode.SUCCESS) throw new TransportStatusError(rsp.status);
   if (rsp.dataLength !== SIGNATURE_LENGTH) throw Error('Invalid length Signature');
-  console.log(rsp.data)
-  return Buffer.from(rsp.data, "hex")
- 
+  console.log(Buffer.from(rsp.data, 'hex').toString('hex'))
+  return rsp.data.slice(0, 64)
+
 }
 
 export async function getPublicKey(transport, path) {

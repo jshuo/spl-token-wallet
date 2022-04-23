@@ -59,7 +59,9 @@ export async function signAndSendTransaction(
   }
 
   transaction = await wallet.signTransaction(transaction);
+  console.log('signAndSendTransaction: ' + Buffer.from(transaction.signatures[0].signature, 'hex').toString('hex'))
   const rawTransaction = transaction.serialize();
+  console.log('signAndSendTransaction: ' + rawTransaction.toString('hex'))
   return await connection.sendRawTransaction(rawTransaction, {
     skipPreflight,
     preflightCommitment: 'single',

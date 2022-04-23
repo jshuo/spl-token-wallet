@@ -8,7 +8,7 @@ export class WalletProviderFactory {
       return new LocalStorageWalletProvider(args);
     }
 
-    if (type === 'ledger') {
+    if (type === 'secux') {
       return new SecuxWalletProvider(args);
     }
     

@@ -299,7 +299,7 @@ export default function PopupPage({ opener }) {
   async function sendAllSignatures(messages) {
     let signatures;
     // Ledger must sign one by one.
-    if (wallet.type === 'ledger') {
+    if (wallet.type === 'secux') {
       signatures = [];
       for (let k = 0; k < messages.length; k += 1) {
         signatures.push(await wallet.createSignature(messages[k]));
