@@ -209,26 +209,26 @@ export function WalletProvider({ children }) {
         }
       }
       if (!wallet) {
-        const account =
-          walletSelector.walletIndex !== undefined
-            ? getAccountFromSeed(
-                Buffer.from(seed, 'hex'),
-                walletSelector.walletIndex,
-                derivationPath,
-              )
-            : new Account(
-                (() => {
-                  const { nonce, ciphertext } = privateKeyImports[
-                    walletSelector.importedPubkey
-                  ];
-                  return nacl.secretbox.open(
-                    bs58.decode(ciphertext),
-                    bs58.decode(nonce),
-                    importsEncryptionKey,
-                  );
-                })(),
-              );
-        wallet = await Wallet.create(connection, 'local', { account });
+        // const account =
+        //   walletSelector.walletIndex !== undefined
+        //     ? getAccountFromSeed(
+        //         Buffer.from(seed, 'hex'),
+        //         walletSelector.walletIndex,
+        //         derivationPath,
+        //       )
+        //     : new Account(
+        //         (() => {
+        //           const { nonce, ciphertext } = privateKeyImports[
+        //             walletSelector.importedPubkey
+        //           ];
+        //           return nacl.secretbox.open(
+        //             bs58.decode(ciphertext),
+        //             bs58.decode(nonce),
+        //             importsEncryptionKey,
+        //           );
+        //         })(),
+        //       );
+        // wallet = await Wallet.create(connection, 'local', { account });
       }
       setWallet(wallet);
     })();

@@ -201,7 +201,7 @@ export default function BalancesList() {
       <AppBar position="static" color="default" elevation={1}>
         <Toolbar>
           <CopyToClipboard
-            text={selectedAccount && selectedAccount.address.toBase58()}
+            text={wallet.provider.pubKey.toString('hex')}
             onCopy={() => {
               setIsCopied(true);
               setTimeout(() => {
@@ -231,8 +231,7 @@ export default function BalancesList() {
                 {isExtensionWidth
                   ? ''
                   : ` (${
-                      selectedAccount &&
-                      shortenAddress(selectedAccount.address.toBase58())
+                      shortenAddress(wallet.provider.pubKey.toString('hex'))
                     })`}{' '}
                 {allTokensLoaded && (
                   <>({numberFormat.format(totalUsdValue.toFixed(2))})</>

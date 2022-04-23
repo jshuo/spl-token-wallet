@@ -405,7 +405,8 @@ const useFooterStyles = makeStyles((theme) => ({
   footer: {
     display: 'flex',
     justifyContent: 'flex-end',
-    margin: theme.spacing(30),
+    marginBottom: theme.spacing(35),
+    fontSize: 18,
   },
 }));
 

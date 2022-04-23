@@ -474,7 +474,7 @@ export function AccountsSelector({
         }}
       >
         <Typography variant="h5" gutterBottom>
-          Derivable Accounts
+          Derivable Accounts from SecuX Wallet
         </Typography>
         <FormControl variant="outlined">
           <Select
@@ -485,18 +485,7 @@ export function AccountsSelector({
           >
             {showRoot && (
               <MenuItem value={DerivationPathMenuItem.Bip44Root}>
-                {`m/44'/501'`}
-              </MenuItem>
-            )}
-            <MenuItem value={DerivationPathMenuItem.Bip44}>
-              {`m/44'/501'/0'`}
-            </MenuItem>
-            <MenuItem value={DerivationPathMenuItem.Bip44Change}>
-              {`m/44'/501'/0'/0'`}
-            </MenuItem>
-            {showDeprecated && (
-              <MenuItem value={DerivationPathMenuItem.Deprecated}>
-                {`m/501'/0'/0/0 (deprecated)`}
+                {`m/44'/501'/0'`}
               </MenuItem>
             )}
           </Select>
